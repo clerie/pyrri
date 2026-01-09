@@ -8,7 +8,7 @@
         system = "x86_64-linux";
       };
     in {
-      pyrri = pkgs.python311Packages.buildPythonPackage rec {
+      pyrri = pkgs.python3Packages.buildPythonPackage rec {
         pname = "pyrri";
         version = "0.1.2";
 
@@ -16,9 +16,7 @@
 
         format = "pyproject";
 
-        buildInputs = [ pkgs.python311Packages.hatchling ];
-        propagatedBuildInputs = with pkgs.python311Packages; [
-        ];
+        buildInputs = [ pkgs.python3Packages.hatchling ];
 
         pythonImportsCheck = [ "rri" ];
 
