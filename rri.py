@@ -78,7 +78,7 @@ class RRIClient(object):
         @param password string with password
         @raise AuthorizationError is raised when credentials are unknown to RRI server
         """
-        payload = "version: 4.0\n" + \
+        payload = "version: 5.0\n" + \
                 "action: LOGIN\n" + \
                 "user: " + str(username) + "\n" + \
                 "password: " + str(password) + "\n"
@@ -135,7 +135,7 @@ class RRIClient(object):
 
         @raise RRIError is raised when logout failed
         """
-        payload = "version: 4.0\n" + \
+        payload = "version: 5.0\n" + \
                 "action: LOGOUT\n"
         answer = self.talk(payload)
         if "RESULT: success" not in answer:
