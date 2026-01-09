@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""!DENIC RRI module and commandline client
+"""
+Client library for the DENIC real-time registration interface RRI
 """
 
 import os
@@ -32,7 +33,8 @@ class RRIError(Exception):
 
 
 class RRIClient(object):
-    """!RRI Client Module
+    """
+    RRI Client Module
     """
 
     def __init__(self):
@@ -41,19 +43,22 @@ class RRIClient(object):
         self.socket = None
 
     def load_ssl_trustanchor(self, filename):
-        """!Load SSL trustanchor
+        """
+        Load SSL trustanchor
 
         When calling this method the contents of filename get loaded as trustanchor
         and on connection the certificate of the RRI server is checked against it.
-        @param filename File with Certificates in PEM format
+
+        :param filename: File with Certificates in PEM format
         """
         self.ssl_ctx.load_verify_locations(cafile=filename)
 
     def connect(self, host, port=51131):
-        """!Connect to RRI server
+        """
+        Connect to RRI server
 
-        @param host hostname or IP address of RRI server
-        @param port optional TCP port of RRI server, default=51131
+        :param host: Hostname or IP address of RRI server
+        :param port: optional TCP port of RRI server, default=51131
         """
         if self.socket:
             self.disconnect()
@@ -61,22 +66,26 @@ class RRIClient(object):
         self.socket.connect((host, port))
 
     def check_ssl_cert(self, certname):
-        """!Checks the certname against the certificate presented by RRI server
+        """
+        Checks the certname against the certificate presented by RRI server
 
         Call this method after connection to RRI server is established, to check if the
         certificate presented by the server contains the expected name.
-        @param certname Name of certificate
-        @raise CertificateError is raised when certname does not match
+
+        :param certname: Name of certificate
+        :raises CertificateError: Certname does not match
         """
         cert = self.socket.getpeercert(binary_form=False)
         ssl.match_hostname(cert, certname)
 
     def login(self, username, password):
-        """!Login to RRI server
+        """
+        Login to RRI server
 
-        @param username string with username/login
-        @param password string with password
-        @raise AuthorizationError is raised when credentials are unknown to RRI server
+        :param username: Username
+        :param password: Password
+
+        :raise AuthorizationError: Credentials are unknown to RRI server
         """
         payload = "version: 5.0\n" + \
                 "action: LOGIN\n" + \
@@ -88,9 +97,10 @@ class RRIClient(object):
                                      answer)
 
     def _send_data(self, data):
-        """!Internal method: sends data to RRI server
+        """
+        Internal method: sends data to RRI server
 
-        @param data string with order send to RRI server
+        :param data: Order to send to RRI server
         """
         payload = bytes(data, "utf-8")
         size = pack('!i', len(payload))
@@ -98,10 +108,12 @@ class RRIClient(object):
         self.socket.send(payload)
 
     def _read(self, size):
-        """!Internal method: reads bytes from RRI server
+        """
+        Internal method: reads bytes from RRI server
 
-        @param bytes integer with amount of bytes to read from RRI server
-        @return binary data from socket
+        :param size: Amount of bytes to read from RRI server
+
+        :return: binary data from socket
         """
         data = b""
         rest = size
@@ -112,28 +124,34 @@ class RRIClient(object):
         return data
 
     def _read_data(self):
-        """!Internal method: reads answer from RRI server
+        """
+        Internal method: reads answer from RRI server
 
-        @return string with answer
+        :return: answer
         """
         data = self._read(4)
         size = int(unpack('!i', data)[0])
         return self._read(size).decode("utf-8")
 
     def talk(self, data):
-        """!Send order to RRI server and read the answer
+        """
+        Send order to RRI server and read the answer
 
-        @param data string which is send to RRI server. Can be key-/value- or xml-format.
-        @return string with answer
-        @note answer is not checked if RRI indicated an error
+        Note: answer is not checked if RRI indicated an error
+
+        :param data: Order to send to RRI server. Can be key-/value- or xml-format.
+
+        :return: Answer
+
         """
         self._send_data(data)
         return self._read_data()
 
     def logout(self):
-        """!Logout from RRI server
+        """
+        Logout from RRI server
 
-        @raise RRIError is raised when logout failed
+        :raises RRIError: Logout failed
         """
         payload = "version: 5.0\n" + \
                 "action: LOGOUT\n"
@@ -142,7 +160,8 @@ class RRIClient(object):
             raise RRIError("could not logout", answer)
 
     def disconnect(self):
-        """!Disconnect from RRI server
+        """
+        Disconnect from RRI server
         """
         self.socket.close()
         del self.socket

@@ -6,3 +6,7 @@ theme:
 plugins:
   - mkdocstrings:
       default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
