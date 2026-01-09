@@ -3,3 +3,4 @@
 /documentation/
 result*
 dist
+__pycache__
