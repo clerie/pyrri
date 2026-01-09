@@ -10,6 +10,9 @@ pip install pyrri
 
 ## Quickstart
 
+Make sure your clients IP address is allowed to access RRI.
+See [DENIC RRI IP Allowlisting](https://docs.denic.de/en/Content/DENIC-29/IP%20Allowlisting.htm) for more information.
+
 ```
 from rri import RRIClient
 
@@ -54,6 +57,14 @@ options:
   -o, --output OUTPUT   Filename in which the answer from RRI is stored. When skipping this
                         parameter, answer is written to stdout (default: None)
 ```
+
+## References
+
+- [DENIC Docs](https://docs.denic.de/)
+- [DENIC RRI XML Schema](https://docs.denic.de/en/Content/Beispiele/50/XMLSchema/Overview-XMLSchema.htm)
+- [DENIC RRI Rate Limiting](https://docs.denic.de/en/Content/DENIC-29/Access-Control-Limit%20%28ACL%29.htm)
+- [DENIC RRI IP Allowlisting](https://docs.denic.de/en/Content/DENIC-29/IP%20Allowlisting.htm)
+- [DENIC RRI User Authentication](https://docs.denic.de/en/Content/DENIC-29/Login-Logout.htm)
 
 ## Attribution
 
