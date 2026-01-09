@@ -10,7 +10,7 @@
     in {
       pyrri = pkgs.python3Packages.buildPythonPackage rec {
         pname = "pyrri";
-        version = "0.1.2";
+        version = "0.2.0";
 
         src = ./.;
 
