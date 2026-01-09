@@ -21,6 +21,13 @@ rri = RRIClient()
 rri.connect("rri.denic.de", 51131)
 rri.login(username, password)
 
+order = """
+Version: 5.0
+Action: INFO
+DOMAIN: denic.de
+Recursive: false
+""".strip()
+
 answer = rri.talk(order)
 
 rri.logout()
