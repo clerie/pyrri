@@ -36,9 +36,7 @@ class RRIClient(object):
     """
 
     def __init__(self):
-        self.ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
-        # self.ssl_ctx.verify_mode = ssl.CERT_REQUIRED
-        self.ssl_ctx.check_hostname = False
+        self.ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         self.ssl_ctx.load_default_certs()
         self.socket = None
 
@@ -50,7 +48,6 @@ class RRIClient(object):
         @param filename File with Certificates in PEM format
         """
         self.ssl_ctx.load_verify_locations(cafile=filename)
-        self.ssl_ctx.verify_mode = ssl.CERT_REQUIRED
 
     def connect(self, host, port=51131):
         """!Connect to RRI server
@@ -60,7 +57,7 @@ class RRIClient(object):
         """
         if self.socket:
             self.disconnect()
-        self.socket = self.ssl_ctx.wrap_socket(socket.socket(socket.AF_INET))
+        self.socket = self.ssl_ctx.wrap_socket(socket.socket(socket.AF_INET), server_hostname=host)
         self.socket.connect((host, port))
 
     def check_ssl_cert(self, certname):
