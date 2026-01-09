@@ -22,6 +22,29 @@
 
         meta.mainProgram = "rri";
       };
+
+      docs = pkgs.stdenv.mkDerivation {
+        pname = "pyrri-docs";
+        version = self.packages.x86_64-linux.pyrri.version;
+
+        src = ./.;
+
+        buildInputs = [
+          pkgs.python3.pkgs.mkdocs-material
+          pkgs.python3.pkgs.mkdocstrings-python
+        ];
+
+        buildPhase = ''
+          cp README.md docs/index.md
+          python3 -m mkdocs build
+        '';
+
+        installPhase = ''
+          mkdir -p $out
+          cp -r ./site/* $out/
+        '';
+      };
+
       default = self.packages.x86_64-linux.pyrri;
     };
 
@@ -34,6 +57,7 @@
         packages = with pkgs; [ hatch ];
         inputsFrom = [
           self.packages.x86_64-linux.pyrri
+          self.packages.x86_64-linux.docs
         ];
       };
       default = self.devShells.x86_64-linux.pyrri;
