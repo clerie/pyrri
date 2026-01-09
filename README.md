@@ -1,70 +1,65 @@
 # pyrri
-Commandline client and module to send/receive RRI commands, written in Python 3
 
-# requirements
-You must have a recent version of Python 3 installed. The client is tested with Python 3.6,
-but it may run with older versions, too. It is not compatible with Python 2.x!
+Client library for the DENIC real-time registration interface RRI
 
-No third party modules are needed.
+## Install
 
-# Use it as a client
+```
+pip install pyrri
+```
 
-You need to copy "rri.py" somewhere in your PATH and make it executable. Then call it with "-h"
-to show help:
+## Quickstart
 
-    rri.py -h
-    
-All parameters are optional:
-* -s SERVER defaults to "rri.denic.de:51131"
-* Username and Password can be given as Parameters with -u and -p, but also
-  and more secure as environment variables RRI\_USERNAME and RRI\_PASSWORD
-* order can be piped in from stdin or as file with parameter -i
-* answer is written to stdout or to a file which can be set with parameter -o
-
-Example 1:
-
-    export RRI_USERNAME="DENIC-1000006-USER"
-    export RRI_PASSWORD="this is a secret"
-    cat example_kv.txt | ./rri.py
-    
-Example 2:
-
-    ./rri.py -s rri.test.denic.de:51131 -u DENIC-1000006-USER -p password -i example_kv.txt -o answer.txt
+```
+from rri import RRIClient
 
 
-# Use it as a module
+rri = RRIClient()
+rri.connect("rri.denic.de", 51131)
+rri.login(username, password)
 
-Copy rri.py to your project, import the RRIClient class, instantiate it, connect to the rri server and login
+answer = rri.talk(order)
 
-    from rri import RRIClient
-    ...
-    
-    rri = RRIClient()
-    # connect to rri server
-    rri.connect(hostname, port)
-    # login with your credentials
-    rri.login(username, password)
-    
-Now you can send a command to the rri server:
+rri.logout()
+rri.disconnect()
+```
 
-    answer = rri.talk(order)
+`order` can be `k/v` or `xml` formatted.
+See [Examples section in DENIC manual](https://docs.denic.de/en/Content/Beispiele/50/Overview-Beispiele.htm) for more information about what is expected.
 
-You can repeatedly call the "talk"-method with further orders.
+## Interactive CLI
 
-When you are done, logout and disconnect     
-    
-    rri.logout()
-    rri.disconnect()
-    
-When an error occures the methods raise exceptions, which you should handle properly!
- 
-    
-# TODO
-* Implement check and validation of certificate with trustchain in module and cli
-* add automated tests
+Show help:
 
+```
+rri --help
+```
 
-# License
+```
+usage: rri.py [-h] [-s SERVER] [-u USERNAME] [-p PASSWORD] [-i INPUT] [-o OUTPUT]
+
+RRI-Client
+
+options:
+  -h, --help            show this help message and exit
+  -s, --server SERVER   Hostname and port of rri-server. or IP-address of RRI-server
+                        (default: rri.denic.de:51131)
+  -u, --user USERNAME   Username for RRI-server. For more security, this can also be set by
+                        environment variable RRI_USERNAME (default: None)
+  -p, --password PASSWORD
+                        Password for RRI-server. For more security, this can also be set by
+                        environment variable RRI_PASSWORD (default: None)
+  -i, --input INPUT     Filename with order to send to RRI. When skipping this parameter,
+                        the order is read from stdin (default: None)
+  -o, --output OUTPUT   Filename in which the answer from RRI is stored. When skipping this
+                        parameter, answer is written to stdout (default: None)
+```
+
+## Attribution
+
+This project is based on the [DENIC pyrri example code](https://github.com/DENICeG/pyrri).
+
+## License
 
 Copyright (c) 2019 DENIC eG
 
